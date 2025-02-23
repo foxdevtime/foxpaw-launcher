@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-    timeout-minutes: 15  # Устанавливаем явный тайм-аут в 15 минут
+    timeout-minutes: 15
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -30,6 +30,7 @@ jobs:
             npm-${{ runner.os }}-
 
       - name: Cache apt packages
+        if: matrix.os == 'ubuntu-latest'
         uses: actions/cache@v3
         with:
           path: /var/cache/apt
@@ -65,9 +66,9 @@ jobs:
         run: |
           echo "Starting build on ${{ matrix.os }}"
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
-            npm run build -- --win
+            npm run build:win
           else
-            xvfb-run -a npm run build -- --linux
+            xvfb-run -a npm run build:linux
           fi
           echo "Build completed successfully"
 
@@ -75,6 +76,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "Starting publish"
-          npm run publish
+          echo "Starting publish on ${{ matrix.os }}"
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            npm run publish:win
+          else
+            npm run publish:linux
+          fi
           echo "Publish completed"
