@@ -4,8 +4,8 @@
   "main": "src/preload/main.js",
   "scripts": {
     "start": "electron .",
-    "build:win": "electron-builder --win",
-    "build:linux": "electron-builder --linux",
+    "build:win": "electron-builder --win --publish never",
+    "build:linux": "electron-builder --linux --publish never",
     "publish:win": "electron-builder --win --publish always",
     "publish:linux": "electron-builder --linux --publish always"
   },
