@@ -25,9 +25,7 @@
     },
     "linux": {
       "target": ["AppImage", "deb"],
-      "icon": "assets/icons/icon.png",
-      "afterInstall": null,
-      "afterRemove": null
+      "icon": "assets/icons/icon.png"
     }
   },
   "keywords": [],
