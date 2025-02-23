@@ -20,6 +20,16 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Install Wine (Ubuntu only)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wine64
+
+      - name: Clean npm cache (Windows only)
+        if: matrix.os == 'windows-latest'
+        run: npm cache clean --force
+
       - name: Install dependencies
         run: npm install
 
@@ -29,19 +39,15 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libfuse2 fakeroot
 
-      - name: Build and publish
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build
         run: |
           if [ "${{ matrix.os }}" == "windows-latest" ]; then
             npm run build -- --win
           else
             npm run build -- --linux
           fi
-          npm run publish
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.os }}-build
-          path: Release/*
+      - name: Publish
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run publish
