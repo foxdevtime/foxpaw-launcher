@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Updating MyApp</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #e0e0e0;
+    }
+    #progress {
+      font-size: 20px;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+<div id="progress">Downloading update: 0%</div>
+<script>
+  const { ipcRenderer } = require("electron");
+  ipcRenderer.on("update-progress", (event, percent) => {
+    document.getElementById("progress").innerText = `Downloading update: ${percent}%`;
+  });
+</script>
+</body>
+</html>

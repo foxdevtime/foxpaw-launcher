@@ -1,0 +1,47 @@
+{
+  "name": "debug-only",
+  "version": "1.0.0",
+  "main": "src/preload/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win --linux",
+    "publish": "electron-builder --win --linux --publish always"
+  },
+  "build": {
+    "appId": "com.example.myapp",
+    "productName": "MyApp",
+    "copyright": "Copyright © 2025 My Company",
+    "directories": {
+      "output": "release"
+    },
+    "publish": {
+      "provider": "github",
+      "owner": "foxdevtime",
+      "repo": "foxpaw-launcher"
+    },
+    "win": {
+      "target": ["nsis"],
+      "icon": "assets/icons/icon.ico"
+    },
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "icon": "assets/icons/icon.png"
+    }
+  },
+  "keywords": [],
+  "homepage": "https://github.com/foxdevtime",
+  "author": {
+    "name": "lubitellisic",
+    "email": "lubitellisic@gmail.com"
+  },
+  "license": "ISC",
+  "description": "A simple Electron app with auto-update",
+  "devDependencies": {
+    "electron": "^34.0.0",
+    "electron-builder": "^25.0.5"
+  },
+  "dependencies": {
+    "electron-updater": "^6.3.9",
+    "dotenv": "^16.4.5"
+  }
+}
