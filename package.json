@@ -4,8 +4,10 @@
   "main": "src/preload/main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder --win --linux",
-    "publish": "electron-builder --win --linux --publish always"
+    "build:win": "electron-builder --win",
+    "build:linux": "electron-builder --linux",
+    "publish:win": "electron-builder --win --publish always",
+    "publish:linux": "electron-builder --linux --publish always"
   },
   "build": {
     "appId": "com.example.myapp",
