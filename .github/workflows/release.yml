@@ -11,6 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
+    timeout-minutes: 15  # Устанавливаем явный тайм-аут в 15 минут
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -48,7 +49,10 @@ jobs:
         run: npm cache clean --force
 
       - name: Install dependencies
-        run: npm install
+        run: |
+          echo "Starting npm install"
+          npm install
+          echo "npm install completed"
 
       - name: Install Linux dependencies (for .deb and .AppImage)
         if: matrix.os == 'ubuntu-latest'
@@ -59,13 +63,18 @@ jobs:
       - name: Build
         shell: bash
         run: |
+          echo "Starting build on ${{ matrix.os }}"
           if [ "${{ matrix.os }}" = "windows-latest" ]; then
             npm run build -- --win
           else
             xvfb-run -a npm run build -- --linux
           fi
+          echo "Build completed successfully"
 
       - name: Publish
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run publish
+        run: |
+          echo "Starting publish"
+          npm run publish
+          echo "Publish completed"
