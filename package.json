@@ -1,6 +1,6 @@
 {
   "name": "debug-only",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "main": "src/preload/main.js",
   "scripts": {
     "start": "electron .",
