@@ -24,7 +24,7 @@ function createMainWindow() {
         checkForUpdates(mainWindow); // Проверяем обновления после загрузки
     });
 
-    // mainWindow.webContents.openDevTools(); // Уберите, если не нужно
+    //mainWindow.webContents.openDevTools(); // Уберите, если не нужно
 }
 
 app.whenReady().then(() => {

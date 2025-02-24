@@ -1,5 +1,5 @@
 const { autoUpdater } = require("electron-updater");
-const { BrowserWindow, dialog } = require("electron");
+const { BrowserWindow, dialog, app } = require("electron");
 const path = require("path");
 
 let progressWindow;
@@ -21,41 +21,42 @@ function createProgressWindow() {
 
 function checkForUpdates(mainWindow) {
     mainWindowRef = mainWindow;
+    // autoUpdater.allowPrerelease = true;
     autoUpdater.checkForUpdates();
 
     autoUpdater.on("checking-for-update", () => {
-        console.log("Checking for updates...");
+        console.log("Проверка обновлений...");
     });
 
-    autoUpdater.on("update-available", () => {
-        console.log("Update available!");
+    autoUpdater.on("update-available", (info) => { // Явно принимаем info
+        console.log("Доступно обновление:", info.version);
         showUpdateDialog(info);
     });
 
-    autoUpdater.on("update-not-available", () => {
-        console.log("No updates available.");
-        mainWindow.show();
+    autoUpdater.on("update-not-available", (info) => { // Добавляем info для отладки
+        console.log("Обновлений нет. Текущая версия:", app.getVersion(), "Доступная версия:", info?.version || "неизвестно");
+        mainWindowRef.show();
     });
 
     autoUpdater.on("download-progress", (progressObj) => {
         let percent = Math.floor(progressObj.percent);
-        console.log(`Download progress: ${percent}%`);
+        console.log(`Прогресс загрузки: ${percent}%`);
         if (progressWindow) {
             progressWindow.webContents.send("update-progress", percent);
         }
     });
 
     autoUpdater.on("update-downloaded", () => {
-        console.log("Update downloaded!");
+        console.log("Обновление загружено!");
         if (progressWindow) {
             progressWindow.close();
             progressWindow = null;
         }
-        autoUpdater.quitAndInstall(); // Устанавливаем после загрузки
+        autoUpdater.quitAndInstall();
     });
 
     autoUpdater.on("error", (err) => {
-        console.error("Update error:", err);
+        console.error("Ошибка обновления:", err);
         if (progressWindow) {
             progressWindow.close();
             progressWindow = null;
@@ -75,11 +76,11 @@ function showUpdateDialog(updateInfo) {
     };
 
     dialog.showMessageBox(mainWindowRef, options).then((response) => {
-        if (response.response === 0) { // "Да"
+        if (response.response === 0) {
             console.log("Пользователь согласился на обновление");
             createProgressWindow();
             mainWindowRef.hide();
-            autoUpdater.downloadUpdate(); // Начинаем загрузку
+            autoUpdater.downloadUpdate();
         } else {
             console.log("Пользователь отказался от обновления");
             mainWindowRef.show();
