@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-  <title>Updating...</title>
+  <meta charset="UTF-8">
+  <title>Обновление</title>
   <style>
     body {
       display: flex;
@@ -10,20 +11,21 @@
       height: 100vh;
       margin: 0;
       font-family: Arial, sans-serif;
-      background-color: #e0e0e0;
+      background-color: #f0f0f0;
     }
     #progress {
       font-size: 20px;
-      color: #555;
+      color: #333;
     }
   </style>
 </head>
 <body>
-<div id="progress">Downloading update: 0%</div>
+<div id="progress">Загрузка: 0%</div>
 <script>
-  const { ipcRenderer } = require("electron");
-  ipcRenderer.on("update-progress", (event, percent) => {
-    document.getElementById("progress").innerText = `Downloading update: ${percent}%`;
+  const { ipcRenderer } = require('electron');
+  ipcRenderer.on('update-progress', (event, percent) => {
+    console.log('Progress received:', percent);
+    document.getElementById('progress').innerText = `Загрузка: ${percent}%`;
   });
 </script>
 </body>

@@ -66,7 +66,12 @@ function showUpdateDialog(updateInfo) {
     dialog.showMessageBox(updaterWindow, options).then((response) => {
         if (response.response === 0) {
             console.log("Пользователь согласился на обновление");
-            updaterWindow.webContents.send('start-update');
+            if (updaterWindow && !updaterWindow.isDestroyed()) {
+                console.log("Sending 'start-update' to updater window");
+                updaterWindow.webContents.send('start-update');
+            } else {
+                console.error("Updater window is destroyed or unavailable");
+            }
         } else {
             console.log("Пользователь отказался от обновления");
             updaterWindow.close();
