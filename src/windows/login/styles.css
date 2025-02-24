@@ -1,0 +1,226 @@
+@font-face {
+    font-family: 'Minecraft-Ten';
+    src: url('../../../assets/fonts/minecraft-ten-font-cyrillic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Minecraft';
+    src: url('../../../assets/fonts/minecraft.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+}
+
+.login-container {
+    display: flex;
+    flex-direction: row;
+    background: rgba(64,64,64);
+    border-radius: 18px;
+    height: 100dvh;
+    color: white;
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
+    width: 95%;
+}
+
+.header button {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    width: 15%;
+    height: 100%;
+}
+
+.main {
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    width: 80%;
+}
+
+.left-box {
+    width: 10%
+}
+
+.right-box {
+    width: 10%
+}
+
+svg {
+    width: 80px;
+    top: 145px;
+    position: absolute;
+    right: 0;
+}
+
+h1 {
+    text-align: center;
+    font-family: 'Minecraft-Ten', sans-serif;
+    font-size: 24px;
+    font-weight: 400;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.passwd {
+    width: 30%;
+}
+
+.usname {
+    width: 26%;
+}
+
+label {
+    font-family: 'Minecraft-Ten', sans-serif;
+    color: #8b8b8b;
+    display: flex;
+    width: 40%;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.3);
+    background:
+            linear-gradient(45deg,
+            transparent 45%,
+            rgba(255, 255, 255, 0.1) 45%,
+            rgba(255, 255, 255, 0.1) 55%,
+            transparent 55%
+            ),
+            #4a752c;
+    padding: 2px 8px;
+    border: 2px solid #2d4a1f;
+    margin-bottom: 5px;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.2);
+    opacity: 0.9;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 248px;
+    height: 38px;
+    background: #636363;
+    border: 4px solid #3a3a3a;
+    padding: 0 12px;
+    font-family: 'Minecraft', sans-serif;
+    color: #fff;
+    font-size: 16px;
+    box-shadow:
+            inset 2px 2px 0 #8b8b8b,
+            inset -2px -2px 0 #4a4a4a;
+}
+
+input[type="text"]::placeholder,
+input[type="password"]::placeholder {
+    color: #9e9e9e;
+    opacity: 1;
+    font-style: italic;
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.main button{
+    width: 100%;
+    padding: 12px 24px;
+    margin-top: 16px;
+    margin-bottom: 50px;
+    font-family: 'Minecraft-Ten', sans-serif;
+    font-size: 16px;
+    background: #43A047;
+    color: #FFFFFF;
+    border: 2px solid #1B5E20;
+    cursor: pointer;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+    box-shadow: inset -2px -2px 0 #1B5E20, inset 2px 2px 0 #66BB6A, 4px 4px 0 rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+.status {
+    position: fixed; /* Измените с абсолютной на фиксированную позицию */
+    top: 0%;
+    transform: translateY(0%); /* Центрирование по горизонтали */
+    padding-top: 50%;
+    width: 100dvh;
+    height: 100dvh;
+    border-radius: 8px; /* Скругление углов */
+    text-align: center;
+    z-index: 100;
+    color: white;
+    font-family: 'Minecraft-Ten', sans-serif;
+    transition: opacity 0.5s ease, transform 0.5s ease; /* Анимация появления */
+}
+.status.success {
+    background: rgba(39, 174, 96, 0.8); /* Полупрозрачный зеленый */
+}
+.status.error {
+    background: rgba(192, 57, 43, 0.8); /* Полупрозрачный красный */
+}
+.status.hidden {
+    opacity: 0;
+    transform: translateY(-20px); /* Убираем в верхнее положение при скрытии */
+    pointer-events: none; /* Отключение взаимодействия при скрытии */
+}
+
+
+/* #animated-svg {
+    transition: filter 0.3s ease-in-out;
+}*/
+
+/* Анимация при фокусе
+input:focus ~ #animated-svg {
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { color: white; }
+    50% { color: white; }
+    100% { color: white; }
+}*/
+
+/* Стили для активного состояния*/
+.form-group:focus-within label {
+    color: #fff;
+    transition: all 0.3s ease-in-out;
+}
+
+input:focus-within {
+    outline: transparent;
+    /*animation: lavaPulse 1s ease-in-out forwards;*/
+}
+
+@keyframes lavaPulse {
+    0% {
+        box-shadow: 0 0 10px 0 rgba(255, 115, 0, 0.7);
+    }
+    50% {
+        box-shadow: 0 0 15px 2px rgba(255, 183, 0, 0.9);
+    }
+    100% {
+        box-shadow: 0 0 10px 0 rgba(255, 89, 0, 0.7);
+    }
+}
+/*
+.form-group:focus-within .custom-input {
+    border-color: #269827;
+    box-shadow: 0 0 8px rgba(38,152,43,0.3);
+}*/

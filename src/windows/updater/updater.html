@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Updater</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        #status {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<div class="loader"></div>
+<div id="status">Проверка обновлений...</div>
+<script>
+    const { ipcRenderer } = require('electron');
+    ipcRenderer.on('update-status', (event, status) => {
+        document.getElementById('status').innerText = status;
+    });
+    ipcRenderer.on('start-update', () => {
+        console.log('Received start-update command');
+        ipcRenderer.send('start-update');
+    });
+</script>
+</body>
+</html>

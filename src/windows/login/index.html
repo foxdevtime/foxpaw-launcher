@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Авторизация</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="login-container">
+    <div class="left-box">
+        <div class="icon"></div>
+    </div>
+    <div class="main">
+        <h1></h1>
+        <form id="login-form">
+            <div class="form-group">
+                <label class="usname" for="username">Логин:</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label class="passwd" for="password">Пароль:</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" id="login-btn">Войти</button>
+        </form>
+        <div id="status-message" class="status hidden"></div>
+    </div>
+    <div class="right-box">
+        <div class="close">
+            x
+        </div>
+    </div>
+    <svg id="animated-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+        <rect x="203.947" y="212.848" width="58.05" height="116.099" style="stroke: rgb(15, 109, 20); stroke-width: 4px; transform-box: fill-box; transform-origin: 50% 50%; fill: rgb(38, 152, 43);">
+            <animateTransform type="translate" additive="sum" attributeName="transform" values="0 0;-2 -2;0 0" begin="click" dur="1s" fill="freeze" keyTimes="0; 0.49867; 1"></animateTransform>
+            <animateTransform type="rotate" additive="sum" attributeName="transform" values="0;1;0" begin="click" dur="1s" fill="freeze" keyTimes="0; 0.49505; 1"></animateTransform>
+        </rect>
+        <rect x="171.053" y="320.046" width="45.279" height="44.892" style="stroke: rgb(15, 109, 20); stroke-width: 4px; fill: rgb(38, 152, 43);">
+            <animateTransform type="translate" additive="sum" attributeName="transform" values="0 0;-4 -7;0 0" begin="click" dur="1s" fill="freeze" keyTimes="0; 0.5; 1"></animateTransform>
+        </rect>
+        <rect x="249.226" y="319.659" width="45.279" height="44.892" style="stroke: rgb(15, 109, 20); stroke-width: 4px; fill: rgb(38, 152, 43);">
+            <animateTransform type="translate" additive="sum" attributeName="transform" values="0 0;-1 -1;0 0" begin="click" dur="1s" fill="freeze" keyTimes="0; 0.5; 1"></animateTransform>
+        </rect>
+        <g style="transform-origin: 232.585px 172.987px;">
+            <rect x="192.724" y="133.127" width="79.721" height="79.721" style="stroke-width: 4px; fill: rgb(38, 152, 43); stroke: rgb(27, 94, 32);"></rect>
+            <rect x="199.699" y="153.575" width="13.25" height="14.554" style="stroke: rgb(0, 0, 0);"></rect>
+            <rect x="201.487" y="184.636" width="9.429" height="20.098" style="stroke: rgb(0, 0, 0);"></rect>
+            <rect x="195.173" y="177.73" width="9.837" height="17.053" style="stroke: rgb(0, 0, 0);"></rect>
+            <animateTransform type="rotate" additive="sum" attributeName="transform" values="0;2;-2;0" begin="click" dur="1s" fill="freeze" keyTimes="0; 0.24787; 0.75; 1"></animateTransform>
+            <animateTransform type="translate" additive="sum" attributeName="transform" values="0 0;0 0;0 0" dur="1s" fill="freeze" keyTimes="0; 0.25068; 1"></animateTransform>
+        </g>
+    </svg>
+</div>
+<script src="login.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const inputs = document.querySelectorAll('input');
+        const svg = document.getElementById('animated-svg');
+
+        // Функция для запуска анимации
+        function startSvgAnimation() {
+            // Анимация основного прямоугольника
+            svg.querySelectorAll('animateTransform').forEach(anim => {
+                anim.beginElement();
+            });
+
+            // Дополнительные эффекты при фокусе
+            //svg.style.filter = 'drop-shadow(0 0 8px rgba(38,152,43,0.5))';
+        }
+
+        // Функция для сброса анимации
+        function resetSvgAnimation() {
+            svg.style.filter = 'none';
+        }
+
+        // Обработчики для полей ввода
+        inputs.forEach(input => {
+            input.addEventListener('focus', startSvgAnimation);
+            input.addEventListener('blur', resetSvgAnimation);
+        });
+
+        // Дополнительная анимация при взаимодействии
+        /*document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            svg.querySelector('rect').style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                svg.querySelector('rect').style.transform = 'scale(1)';
+            }, 500);
+        });*/
+    });
+</script>
+</body>
+</html>

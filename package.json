@@ -1,6 +1,6 @@
 {
   "name": "debug-only",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "main": "src/preload/main.js",
   "scripts": {
     "start": "electron .",
@@ -43,7 +43,11 @@
     "electron-builder": "^25.0.5"
   },
   "dependencies": {
+    "axios": "^1.7.9",
     "electron-updater": "^6.3.9",
-    "dotenv": "^16.4.5"
+    "dotenv": "^16.4.5",
+    "fs-extra": "^11.3.0",
+    "minecraft-launcher-core": "^3.18.2",
+    "node-fetch": "^3.3.2"
   }
 }

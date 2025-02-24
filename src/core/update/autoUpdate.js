@@ -1,9 +1,8 @@
 const { autoUpdater } = require("electron-updater");
-const { BrowserWindow, dialog, app } = require("electron");
+const { BrowserWindow, app } = require("electron");
 const path = require("path");
 
 let progressWindow;
-let mainWindowRef;
 
 function createProgressWindow() {
     progressWindow = new BrowserWindow({
@@ -19,23 +18,24 @@ function createProgressWindow() {
     progressWindow.loadFile(path.join(__dirname, "../../windows/progress/progress.html"));
 }
 
-function checkForUpdates(mainWindow) {
-    mainWindowRef = mainWindow;
-    // autoUpdater.allowPrerelease = true;
+function checkForUpdates(updaterWindow, callback) {
+    autoUpdater.autoDownload = false; // Отключаем автоматическую загрузку
+    // autoUpdater.allowPrerelease = true; // Раскомментируйте для пререлизов
     autoUpdater.checkForUpdates();
 
     autoUpdater.on("checking-for-update", () => {
         console.log("Проверка обновлений...");
+        updaterWindow.webContents.send('update-status', 'Проверка обновлений...');
     });
 
-    autoUpdater.on("update-available", (info) => { // Явно принимаем info
+    autoUpdater.on("update-available", (info) => {
         console.log("Доступно обновление:", info.version);
-        showUpdateDialog(info);
+        callback({ isUpdateAvailable: true, version: info.version });
     });
 
-    autoUpdater.on("update-not-available", (info) => { // Добавляем info для отладки
+    autoUpdater.on("update-not-available", (info) => {
         console.log("Обновлений нет. Текущая версия:", app.getVersion(), "Доступная версия:", info?.version || "неизвестно");
-        mainWindowRef.show();
+        callback({ isUpdateAvailable: false });
     });
 
     autoUpdater.on("download-progress", (progressObj) => {
@@ -61,30 +61,20 @@ function checkForUpdates(mainWindow) {
             progressWindow.close();
             progressWindow = null;
         }
-        mainWindow.show();
+        updaterWindow.webContents.send('update-status', 'Ошибка обновления');
+        callback({ isUpdateAvailable: false, error: err });
     });
-}
 
-function showUpdateDialog(updateInfo) {
-    const options = {
-        type: 'question',
-        buttons: ['Да', 'Нет'],
-        defaultId: 0,
-        title: 'Обновление доступно',
-        message: `Найдена новая версия: ${updateInfo.version}. Хотите установить её?`,
-        detail: 'Приложение будет перезапущено после установки.',
-    };
-
-    dialog.showMessageBox(mainWindowRef, options).then((response) => {
-        if (response.response === 0) {
-            console.log("Пользователь согласился на обновление");
-            createProgressWindow();
-            mainWindowRef.hide();
-            autoUpdater.downloadUpdate();
-        } else {
-            console.log("Пользователь отказался от обновления");
-            mainWindowRef.show();
-        }
+    // Загрузка начинается только по команде 'start-update'
+    updaterWindow.webContents.on('did-finish-load', () => {
+        updaterWindow.webContents.on('ipc-message', (event, channel) => {
+            if (channel === 'start-update') {
+                console.log('Starting update download');
+                createProgressWindow();
+                updaterWindow.hide();
+                autoUpdater.downloadUpdate();
+            }
+        });
     });
 }
 
