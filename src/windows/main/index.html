@@ -1,24 +1,30 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>MyApp</title>
-  <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
-    }
-    h1 {
-      color: #333;
-    }
-  </style>
-</head>
-<body>
-<h1>Welcome to MyApp v1.0.0</h1>
-<p>Hellooooooooooooooooooooooooooooo</p>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>MyApp</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+      }
+      h1 {
+        color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Welcome to MyApp v<span id="version">1.0.0</span></h1>
+    <script>
+      window.electronAPI.onVersion((version) => {
+        console.log('Version received:', version);
+        document.getElementById('version').innerText = version;
+      });
+    </script>
+  </body>
 </html>

@@ -1,8 +1,9 @@
 const { autoUpdater } = require("electron-updater");
-const { BrowserWindow } = require("electron");
+const { BrowserWindow, dialog } = require("electron");
 const path = require("path");
 
 let progressWindow;
+let mainWindowRef;
 
 function createProgressWindow() {
     progressWindow = new BrowserWindow({
@@ -19,6 +20,7 @@ function createProgressWindow() {
 }
 
 function checkForUpdates(mainWindow) {
+    mainWindowRef = mainWindow;
     autoUpdater.checkForUpdates();
 
     autoUpdater.on("checking-for-update", () => {
@@ -27,8 +29,7 @@ function checkForUpdates(mainWindow) {
 
     autoUpdater.on("update-available", () => {
         console.log("Update available!");
-        createProgressWindow();
-        mainWindow.hide();
+        showUpdateDialog(info);
     });
 
     autoUpdater.on("update-not-available", () => {
@@ -48,16 +49,41 @@ function checkForUpdates(mainWindow) {
         console.log("Update downloaded!");
         if (progressWindow) {
             progressWindow.close();
+            progressWindow = null;
         }
-        autoUpdater.quitAndInstall();
+        autoUpdater.quitAndInstall(); // Устанавливаем после загрузки
     });
 
     autoUpdater.on("error", (err) => {
         console.error("Update error:", err);
         if (progressWindow) {
             progressWindow.close();
+            progressWindow = null;
         }
         mainWindow.show();
+    });
+}
+
+function showUpdateDialog(updateInfo) {
+    const options = {
+        type: 'question',
+        buttons: ['Да', 'Нет'],
+        defaultId: 0,
+        title: 'Обновление доступно',
+        message: `Найдена новая версия: ${updateInfo.version}. Хотите установить её?`,
+        detail: 'Приложение будет перезапущено после установки.',
+    };
+
+    dialog.showMessageBox(mainWindowRef, options).then((response) => {
+        if (response.response === 0) { // "Да"
+            console.log("Пользователь согласился на обновление");
+            createProgressWindow();
+            mainWindowRef.hide();
+            autoUpdater.downloadUpdate(); // Начинаем загрузку
+        } else {
+            console.log("Пользователь отказался от обновления");
+            mainWindowRef.show();
+        }
     });
 }
 
