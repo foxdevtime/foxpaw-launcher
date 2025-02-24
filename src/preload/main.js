@@ -4,7 +4,7 @@ const { checkForUpdates } = require('../core/update/autoUpdate');
 const packageJson = require('../../package.json');
 const { LoginWindow } = require('../windows/login/window');
 const AuthManager = require('../core/auth/authManager');
-const { createMainWindow: createLauncherMainWindow } = require('../windows/main/window');
+const { createMainWindow } = require('../windows/main/window');
 
 let authManager;
 let mainWindow;
@@ -31,21 +31,12 @@ function createUpdaterWindow() {
     return updaterWindow;
 }
 
-function createMainWindow() {
-    mainWindow = createLauncherMainWindow();
-    mainWindow.webPreferences = {
-        nodeIntegration: false,
-        contextIsolation: true,
-        preload: path.join(__dirname, '../preload/preload.js'),
-    };
-    mainWindow.icon = path.join(__dirname, '../../assets/icons/icon.png');
-    mainWindow.loadFile(path.join(__dirname, '../windows/main/index.html'));
-
+function createMainWindowWrapper() { // Переименовал для ясности
+    mainWindow = createMainWindow();
     mainWindow.webContents.on('did-finish-load', () => {
         console.log('Main window loaded, sending version');
         mainWindow.webContents.send('version', packageJson.version);
     });
-
     return mainWindow;
 }
 
@@ -87,7 +78,7 @@ function showUpdateDialog(updateInfo) {
 function proceedToAuth() {
     console.log('Proceeding to auth, authenticated:', authManager.isAuthenticated());
     if (authManager.isAuthenticated()) {
-        mainWindow = createMainWindow();
+        mainWindow = createMainWindowWrapper();
         console.log('Showing main window');
         mainWindow.show();
     } else {
@@ -111,10 +102,15 @@ app.on('window-all-closed', () => {
 
 ipcMain.handle('auth:login', async (_, credentials) => {
     const result = await authManager.login(credentials);
+    console.log('Login result:', result);
     if (result.success) {
         const loginWindow = BrowserWindow.getAllWindows().find(win => win.isVisible());
-        if (loginWindow) loginWindow.close();
-        mainWindow = createMainWindow();
+        if (loginWindow) {
+            console.log('Closing login window');
+            loginWindow.close();
+        }
+        mainWindow = createMainWindowWrapper();
+        console.log('Showing main window after login');
         mainWindow.show();
     }
     return result;

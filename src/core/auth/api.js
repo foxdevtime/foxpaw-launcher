@@ -18,8 +18,8 @@ class AuthAPI {
 
             // Отправляем запрос к API
             const response = await axios.post(`${this.BASE_URL}/login`, {
-                username: String(username), // Убедимся, что username - строка
-                password: String(password), // Убедимся, что password - строка
+                username: String(username),
+                password: String(password),
             }, {
                 headers: {
                     'Content-Type': 'application/json',
