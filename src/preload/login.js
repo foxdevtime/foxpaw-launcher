@@ -1,4 +1,4 @@
-// preload/login.js
+// src/preload/login.js
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('auth', {

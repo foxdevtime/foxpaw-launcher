@@ -1,3 +1,4 @@
+// src/core/auth/session.js
 const fs = require('fs-extra');
 const path = require('path');
 const { AuthAPI } = require('./api');

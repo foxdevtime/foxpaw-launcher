@@ -1,3 +1,4 @@
+// src/core/auth/api.js
 const axios = require('axios');
 
 class AuthAPI {

@@ -1,3 +1,4 @@
+// src/core/auth/authManager.js
 const { AuthAPI } = require('./api');
 const SessionManager = require('./session');
 

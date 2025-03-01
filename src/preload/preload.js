@@ -1,3 +1,4 @@
+// src/preload/preload.js
 const { contextBridge, ipcRenderer } = require('electron');
 
 console.log('Preload script loaded');

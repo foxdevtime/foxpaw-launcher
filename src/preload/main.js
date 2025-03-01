@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
 const path = require('path');
-const { checkForUpdates } = require('../core/update/autoUpdate');
+const { checkForUpdates, createProgressWindow } = require('../core/update/autoUpdate'); // Убрали лишний импорт autoUpdater, он уже в autoUpdate.js
 const packageJson = require('../../package.json');
 const { LoginWindow } = require('../windows/login/window');
 const AuthManager = require('../core/auth/authManager');
@@ -31,7 +31,7 @@ function createUpdaterWindow() {
     return updaterWindow;
 }
 
-function createMainWindowWrapper() { // Переименовал для ясности
+function createMainWindowWrapper() {
     mainWindow = createMainWindow();
     mainWindow.webContents.on('did-finish-load', () => {
         console.log('Main window loaded, sending version');
@@ -52,7 +52,7 @@ function handleUpdateCheck(updateInfo) {
     }
 }
 
-function showUpdateDialog(updateInfo) {
+async function showUpdateDialog(updateInfo) {
     const options = {
         type: 'question',
         buttons: ['Да', 'Нет'],
@@ -63,21 +63,28 @@ function showUpdateDialog(updateInfo) {
     };
 
     console.log('Showing update dialog');
-    dialog.showMessageBox(updaterWindow, options).then((response) => {
-        if (response.response === 0) {
-            console.log("Пользователь согласился на обновление");
-            if (updaterWindow && !updaterWindow.isDestroyed()) {
-                console.log("Sending 'start-update' to updater window");
-                updaterWindow.webContents.send('start-update');
-            } else {
-                console.error("Updater window is destroyed or unavailable");
-            }
-        } else {
-            console.log("Пользователь отказался от обновления");
+    const { response } = await dialog.showMessageBox(updaterWindow, options);
+    if (response === 0) {
+        console.log("Пользователь согласился на обновление");
+        if (updaterWindow && !updaterWindow.isDestroyed()) {
             updaterWindow.close();
-            proceedToAuth();
+            console.log('Updater window closed');
         }
-    });
+        await createProgressWindow();
+        console.log('Starting download after progress window is ready');
+        const { autoUpdater } = require('electron-updater');
+        autoUpdater.downloadUpdate()
+            .then(() => {
+                console.log('Download started successfully');
+            })
+            .catch(err => {
+                console.error('Download failed:', err);
+            });
+    } else {
+        console.log("Пользователь отказался от обновления");
+        updaterWindow.close();
+        proceedToAuth();
+    }
 }
 
 function proceedToAuth() {
